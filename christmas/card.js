@@ -81,10 +81,10 @@
   /* ---------- layouts (stage units) ---------- */
   var LAYOUTS = {
     land: { W: 1200, H: 900, bgPos: '22% center', area: { x: 80, y: 81, w: 960, h: 700 },
-      card: { left: 480, bottom: 180, s: 0.72, hide: 640 }, env: { cx: 720, bottom: 0, s: 1 },
+      card: { left: 480, bottom: 180, s: 0.72, hide: 640 }, env: { cx: 720, bottom: 0, s: 1, clip: 5 },
       hintY: 818, hintSize: 15, fadeCover: false, font: 28, shadow: { cx: 820, cy: 800, rx: 310 } },
     port: { W: 600, H: 1100, bgPos: '20% center', area: { x: 0, y: 0, w: 600, h: 984 },
-      card: { left: 60, bottom: 229, s: 0.9, hide: 640 }, env: { cx: 300, bottom: 0, s: 1.2 },
+      card: { left: 60, bottom: 229, s: 0.9, hide: 640 }, env: { cx: 300, bottom: 0, s: 1.2, clip: 6 },
       hintY: 1028, hintSize: 22, fadeCover: true, font: 33, shadow: { cx: 300, cy: 990, rx: 270 } }
   };
 
@@ -125,7 +125,10 @@
     var area = el('div', 'area', 'left:' + L.area.x + 'px;top:' + L.area.y + 'px;width:' + L.area.w + 'px;height:' + L.area.h + 'px', stageEl);
 
     // card
-    var card = el('div', 'card', 'left:' + L.card.left + 'px;bottom:' + L.card.bottom + 'px', area);
+    // the card sits in a clip box that ends just above the envelope's soft bottom edge,
+    // so it never shows under the envelope (env.clip = faded edge of env-body x scale, rounded up; 17 Nov 2026)
+    var cardClip = el('div', 'cardclip', 'clip-path:inset(0 0 ' + (L.env.bottom + L.env.clip) + 'px 0)', area);
+    var card = el('div', 'card', 'left:' + L.card.left + 'px;bottom:' + L.card.bottom + 'px', cardClip);
     var persp = el('div', 'persp', null, card);
     var parts = buildInside(persp, data, L.font);
     var cover = el('div', 'cover', null, persp);
